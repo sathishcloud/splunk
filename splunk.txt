@@ -1,0 +1,291 @@
+------------[splunk]-------------
+=================================
+
+splunk		--> log monitoring  = machine generated data
+
+
+
+prometheus/grafana	
+			--> metrics/server monitoring
+			--> app mon
+			--> db mon
+			--> Networks
+
+
+logs / events = entry
+
+
+types of logs
+=============
+application logs 		- 		login/success/password 
+server logs			- 		login/command
+network logs			- 		0.0.0.0 ips
+
+what is logs?
+day to day activities
+event or entry activities
+
+why log?
+security purpose
+tracking
+bussiness
+
+application entry -server
+
+Retention period  - Time : ec2 - 30days/90days - zip/compressed
+=============================================================
+
+Log path:
+_________ 
+/var/log/syslog
+/var/log/messages
+/var/log/auth.log
+/var/log/kern.log
+/var/log/nginx/
+C:\Windows\System32\winevt\Logs
+
+log or event -  #single line 
+
+==========================================================================
+SPLUNK : Enterprise product - 60days Trial free/day500mb & real time 100gb 
+==========================================================================
+
+
+[STEP-1]
+--------
+
+
+
+*Installation			- MASTER/SLAVE
+
+				MASTER	-	splunk
+				slave	-	splunk forwarder
+
+splunk master:
+==============
+
+
+login splunk [MASTER] 
+
+
+cd /opt
+wget -O splunk-9.0.2-17e00c557dc1-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.2/linux/splunk-9.0.2-17e00c557dc1-Linux-x86_64.tgz"
+wget
+tar -xvzf 
+cd bin
+./splunk start --accept-license
+
+
+splunk slave:
+=============
+
+login = splunk forwarder - ec2 machine
+
+
+cd /opt
+wget -O splunkforwarder-9.0.2-17e00c557dc1-Linux-s390x.tgz "https://download.splunk.com/products/universalforwarder/releases/9.0.2/linux/splunkforwarder-9.0.2-17e00c557dc1-Linux-s390x.tgz"
+ls
+tar -xvzf
+cd bin
+./splunk start --accept-license
+
+
+./splunk add monitor /var/log/syslog -index main
+
+
+
+[STEP-2]
+--------
+
+*CONFIGURATION -3STEPS
+======================
+
+"MASTER DEDICATED SPLUNK PORT - 9997=listener port"
+
+'MASTER UP-RUNNING'-	LISTENER ENABLE
+
+
+	TIME & LOCATION 
+	OPEN A GATE - DEDICATED SPLUNK PORT-9997
+	cd /opt
+	cd bin
+	./splunk enable listen 9997
+	
+	
+
+
+
+'SLAVE UP-RUNNING'-	DESTINATION
+
+	cd /opt
+	cd bin
+	./splunk add forward-server [Master_IP-0.0.0.0]:9997
+	
+
+
+'LOG TO BE MONITORED' - REAL TIME - APPLICATIN [LOGS]
+
+/OPT/APPLICATION/LOGS
+/VAR/LOG/				
+
+winscp:- slave
+	host name
+	user name
+	password
+login slave ec2 machine
+	ec2-user
+	pwd
+	/home/ec2-user
+	ls
+	syslog
+	chmod 777 syslog	
+	cp syslog /var/log/
+	cd /var/log
+	ls
+	syslog
+
+
+
+
+cd /opt/splunkforwarder/bin
+	pwd
+	./splunk add monitor /var/log/syslog -index main
+	index="main"
+	
+	index="main" host -> source -> sourcetype 
+
+how to write real time queries?
+
+*index		index="main"
+*host		host="dns ip"
+*source		source="var/log/syslog"
+*sourcetype	sourcetype="syslog"
+
+event is should be '1'line log
+
+
+
+
+
+------------[*alert/reports*]------------
+=========================================
+
+Save as
+	-aleart = 15mints
+
+
+
+	-report
+	-existing dashboard
+	-event type
+
+
+
+*dashboards
+
+
+splunk components:
+==================
+
+1. search head 	- Entering our Queries
+2. indexers	- index of the splunk application - A, B, c,
+3. Forwarders	- slave - log - sent to the master [forwarding information to master] 
+
+
+
+
+
+splunk:- 8000
+======
+
+wget -O splunk-9.0.2-17e00c557dc1-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.2/linux/splunk-9.0.2-17e00c557dc1-Linux-x86_64.tgz"
+tar -xvzf 
+ls -lrta
+cd /splunk
+ls -lrta
+cd bin
+./splunk start
+===create user name and pass ward===
+splunk 0.0.0.0/8000
+
+
+--search head / error---
+settings
+indexes
+main
+==============================================================================
+-----------[forwarder]----------------
+======================================
+
+ubuntu
+sudo -i
+apt update
+wget -O splunkforwarder-9.0.2-17e00c557dc1-Linux-s390x.tgz "https://download.splunk.com/products/universalforwarder/releases/9.0.2/linux/splunkforwarder-9.0.2-17e00c557dc1-Linux-s390x.tgz"
+tar -zxvf splunkforwarder-9.0.2-17e00c557dc1-Linux-s390x.tgz
+cd splunkforwarder
+ls
+cd bin
+./splunk start --accept-license
+create splunk forwarder user / passward
+bin
+cd /var/log
+
+===========================
+
+use winscp to move windows os to linux os 
+sys log file
+
+sudo mv syslog /var/log
+
+===============================
+
+enable splunk default port number
+
+./splunk enable listen 9997
+password
+
+
+===================================
+
+
+
+./splunk add forward-server <Master_IP= 0.0.0.0>:9997
+password = forwader pass
+
+====================================
+
+
+./splunk add monitor /var/log/syslog -index main
+
+
+splunk 8000
+default port 9997
+
+
+
+
+index="main"
+index="main" error
+
+index="main" error host="ip-172-31-16-186"
+
+
+save as report
+error 
+save scheduler
+add action
+send mail
+===
+trigger
+error
+save as
+alert
+
+
+
+
+
+
+
+
+

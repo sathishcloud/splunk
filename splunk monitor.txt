@@ -1,0 +1,17 @@
+splunk
+
+--app monitoring
+n/w monitoring
+infra monitoring
+-log monitoring
+      -app logs
+      - infra logs
+m/w log
+
+key-- error,success,failure,exceptions password rest
+
+splunk compontent
+
+search head
+indexers
+forwarders
